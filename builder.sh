@@ -15,7 +15,9 @@ function setup(){
     title
 
     sudo apt -y update | sudo apt -y upgrade
-    sudo apt -y install curl wget git software-properties-common ca-certificates gnupg sudo
+    sudo apt -y install curl wget git software-properties-common ca-certificates gnupg sudo gcc
+
+    sudo apt -y install tmux
 
     main
 }
@@ -28,74 +30,47 @@ function main() {
     
     echo -e
 
-    echo "快速設置 : "
-    echo "├─ (1) code-server / 在 SSH 中安裝 Code-server"
-    echo "├─ (5) tmux / 安裝背景多任務視窗 (SSH)"
+    echo "Tools : "
+    echo "├─ (1) code-server / run visual studio code on web browser."
+    echo "├─ (2) Zip / zip & unzip package."
+    echo "├─ (3) RClone / cloud drive tools."
     echo -e
-    echo "程式環境 : "
-    echo "├─ (10) Node.js & npm / 安裝 nodejs"
-    echo "├─ (11) Python & pip / 安裝 python"
-    echo "├─ (12) openJDK / 安裝 java"
-    echo "├─ (13) gcc / 安裝 c"
-    echo -e
-    echo "其他工具 : "
-    echo "├─ (31) Zip / 安裝 zip"
-    echo "├─ (32) RClone (Docker Privileged)"
+    echo "Programming Language: "
+    echo "├─ (10) nvm / Node.js version manager."
+    echo "├─ (11) pyenv / Python version manager."
 
     echo -e
 
-    echo "(Ctrl + C) 離開"
+    echo "(Ctrl + C) Exit"
 
     echo -e
 
-    read -p "輸入選項 : " choice
+    read -p "Choice : " choice
 
-    if [ $choice -eq 0 ]; then
-        __INSTALL_CERT
     elif [ $choice -eq 1 ]; then
         __INSTALL_CODE_SERVER
-    elif [ $choice -eq 5 ]; then
-        __INSTALL_TMUX
+    elif [ $choice -eq 2 ]; then
+        __INSTALL_ZIP
+    elif [ $choice -eq 3 ]; then
+        __INSTALL_RCLONE
     elif [ $choice -eq 10 ]; then
         __INSTALL_NODE
     elif [ $choice -eq 11 ]; then
         __INSTALL_PYTHON
-    elif [ $choice -eq 12 ]; then
-        __INSTALL_JAVA
-    elif [ $choice -eq 13 ]; then
-        __INSTALL_GCC
-    elif [ $choice -eq 31 ]; then
-        __INSTALL_ZIP
-    elif [ $choice -eq 32 ]; then
-        __INSTALL_RCLONE
     else
         title
-        echo "錯誤的選項！"
+        echo "Error selection. please try again."
         sleep 2
         main
     fi
 }
 
-function __INSTALL_CERT() {
-    title
-    echo "設定憑證..."
-
-    config_file="/config/.config/code-server/config.yaml"
-    sed -i 's/cert: false/cert: true/' "$config_file"
-
-    title
-    echo "設置成功！請重新啟動 code-server！"
-    sleep 2
-
-    main
-}
-
 function __INSTALL_CODE_SERVER(){
     title
-    echo "正在安裝 code-server..."
+    echo "Installing code-server..."
 
     mkdir -p ~/.config/code-server
-    read -s -p "請輸入密碼: " PASSWORD
+    read -s -p "code-server passowrd: " PASSWORD
     echo
 
     cat > ~/.config/code-server/config.yaml <<EOL
@@ -114,74 +89,23 @@ EOL
     main
 }
 
-function __INSTALL_TMUX(){
-    title
-    echo "正在安裝 tmux..."
-
-    sudo apt install tmux -y
-
-    title
-    echo "安裝成功！"
-    sleep 2
-
-    main
-}
-
 
 function __INSTALL_NODE() {
     title
-    echo "正在移除舊版 node.js"
+    echo "Setup Node.js..."
     sudo apt-get remove -y libnode-dev
     sudo apt update -y
     sudo apt upgrade -y
 
     title
-    echo "Nodejs 可安裝版本 : "
+    echo "Installing NVM..."
 
-    echo "├─ (1) 22.x"
-    echo "├─ (2) 23.x"
-    echo "└─ (3) 24.x"
-
-    echo -e
-
-    echo "(E) 返回"
-
-    echo -e
-
-    read -p "輸入選項 : " choice
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
     title
-    echo "正在安裝 Node.js & npm..."
-    case $choice in
-        1)
-            sudo curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            ;;
-        2)
-            sudo curl -sL https://deb.nodesource.com/setup_23.x | sudo -E bash -
-            ;;
-        3)
-            sudo curl -sL https://deb.nodesource.com/setup_24.x | sudo -E bash -
-            ;;
-        E)
-            main
-            ;;
-        *)
-            echo "錯誤選擇"
-            sleep 2
-            __INSTALL_NODE
-            ;;
-    esac
-
-    sudo apt-get install -y -f nodejs
-
-    title
-    echo "正在安裝 npm..."
-    sudo apt-get install -y -f aptitude
-    sudo aptitude install -y npm
-    sudo npm install -g npm
-
-    title
-    echo "安裝成功！"
+    echo "Install Successful."
     sleep 2
 
     main
@@ -195,107 +119,15 @@ function __INSTALL_PYTHON() {
     sudo apt upgrade -y
 
     title
-    echo "可用的 Python 版本: "
+    echo "Installing NVM..."
 
-    echo "├─ (1) 3.9.0"
-    echo "├─ (2) 3.10.0"
-    echo "├─ (3) 3.11.0"
-    echo "└─ (4) 3.12.0"
-
-    echo -e
-
-    echo "(E) 返回"
-
-    echo -e
-
-    read -p "輸入選項 : " choice
+    curl -fsSL https://pyenv.run | bash
+    export PYENV_ROOT="$HOME/.pyenv"
+    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init - bash)"
 
     title
-
-    echo "正在安裝 Python..."
-    case $choice in
-        1)
-            sudo apt install -y python3.9
-            sudo apt install -y python3.9-venv python3-pip
-            ;;
-        2)
-            sudo apt install -y python3.10
-            sudo apt install -y python3.10-venv python3-pip
-            ;;
-        3)
-            sudo apt install -y python3.11
-            sudo apt install -y python3.11-venv python3-pip
-            ;;
-        4)
-            sudo apt install -y python3.12
-            sudo apt install -y python3.12-venv python3-pip
-            ;;
-        E)
-            main
-            ;;
-        *)
-            echo "錯誤選擇"
-            sleep 2
-            __INSTALL_PYTHON
-            ;;
-    esac
-
-    title
-
-    echo "正在安裝 pip..."
-    sudo apt-get install -y -f python3-pip
-    sudo pip3 install -U pip
-
-    title
-    echo "安裝成功！"
-    sleep 2
-
-    main
-}
-
-function __INSTALL_JAVA() {
-    title
-    echo "可用的 OpenJDK 版本 : "
-
-    echo "└─ (1) jdk-21"
-
-    echo -e
-
-    echo "(E) 返回"
-
-    echo -e
-
-    read -p "輸入選項 : " choice
-
-    echo "正在安裝 openJDK..."
-    case $choice in
-        1)
-            sudo apt install -y openjdk-21-jdk
-            ;;
-        E)
-            main
-            ;;
-        *)
-            echo "錯誤選擇"
-            sleep 2
-            __INSTALL_JAVA
-            ;;
-    esac
-
-    title
-    echo "安裝成功！"
-    sleep 2
-
-    main
-}
-
-function __INSTALL_GCC() {
-    title
-    echo "正在安裝 gcc..."
-    sudo apt install gcc -y
-
-    title
-    echo "安裝成功！"
+    echo "Install Successful."
     sleep 2
 
     main
@@ -303,15 +135,15 @@ function __INSTALL_GCC() {
 
 function __INSTALL_ZIP() {
     title
-    echo "正在安裝 zip..."
+    echo "Installing zip..."
     sudo apt install zip -y
 
     title
-    echo "正在安裝 unzip..."
+    echo "Installing unzip..."
     sudo apt install unzip -y
 
     title
-    echo "安裝成功！"
+    echo "Install Successful."
     sleep 2
 
     main
@@ -319,12 +151,12 @@ function __INSTALL_ZIP() {
 
 function __INSTALL_RCLONE(){
     title
-    echo "正在安裝 RClone..."
+    echo "Installing RClone..."
     sudo apt install fuse -y
     sudo apt install rclone -y
 
     title
-    echo "安裝成功！"
+    echo "Install Successful."
     sleep 2
 
     main
