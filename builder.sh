@@ -47,7 +47,7 @@ function main() {
 
     read -p "Choice : " choice
 
-    elif [ $choice -eq 1 ]; then
+    if [ $choice -eq 1 ]; then
         __INSTALL_CODE_SERVER
     elif [ $choice -eq 2 ]; then
         __INSTALL_ZIP
