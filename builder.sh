@@ -101,12 +101,13 @@ function __INSTALL_NODE() {
     echo "Installing NVM..."
 
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.bashrc
 
     title
+    echo "Please run \" source ~/.bashrc \" after install."
     echo "Install Successful."
-    sleep 2
+    read -p "Press enter to continue..."
 
     main
 }
@@ -119,16 +120,17 @@ function __INSTALL_PYTHON() {
     sudo apt upgrade -y
 
     title
-    echo "Installing NVM..."
+    echo "Installing PYENV..."
 
     curl -fsSL https://pyenv.run | bash
-    export PYENV_ROOT="$HOME/.pyenv"
-    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init - bash)"
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+    echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+    echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
 
     title
+    echo "Please run \" source ~/.bashrc \" after install."
     echo "Install Successful."
-    sleep 2
+    read -p "Press enter to continue..."
 
     main
 }
