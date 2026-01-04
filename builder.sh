@@ -110,7 +110,7 @@ function __INSTALL_NODE() {
     if ! grep -q "nvmUpdate()" ~/.bashrc; then
         cat << 'EOF' >> ~/.bashrc
 nvmUpdate() {
-  nvm "$@"
+  \nvm "$@"
   local exit_code=$?
   if [ $exit_code -eq 0 ] && [[ "$1" == "install" || "$1" == "use" || "$1" == "alias" ]]; then
     local current_node_path=$(nvm which current)
