@@ -101,10 +101,14 @@ function __INSTALL_NODE() {
     echo "Installing NVM..."
 
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+    if ! grep -q 'export NVM_DIR' ~/.bashrc; then
+        echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.bashrc
+        echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+    fi
     
-    cat << 'EOF' >> ~/.bashrc
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    if ! grep -q "nvmUpdate()" ~/.bashrc; then
+        cat << 'EOF' >> ~/.bashrc
 nvmUpdate() {
   nvm "$@"
   local exit_code=$?
@@ -122,9 +126,10 @@ nvmUpdate() {
 }
 alias nvm="nvmUpdate"
 EOF
+    fi
 
     title
-    echo -e "Please run \" \033[1;33msource ~/.bashrc\033[0m \" after install."
+    echo -e "Please run \"\033[1;33msource ~/.bashrc\033[0m\" after install."
     echo "Install Successful."
     read -p "Press enter to continue..."
 
