@@ -101,11 +101,30 @@ function __INSTALL_NODE() {
     echo "Installing NVM..."
 
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-    echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.bashrc
-    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+    
+    cat << 'EOF' >> ~/.bashrc
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+nvmUpdate() {
+  nvm "$@"
+  local exit_code=$?
+  if [ $exit_code -eq 0 ] && [[ "$1" == "install" || "$1" == "use" || "$1" == "alias" ]]; then
+    local current_node_path=$(nvm which current)
+    if [[ -x "$current_node_path" ]] && [[ "$current_node_path" != *"system"* ]]; then
+      local system_node_path=$(readlink -f /usr/bin/node)
+      if [[ "$system_node_path" != "$current_node_path" ]]; then
+        sudo ln -sf "$current_node_path" /usr/bin/node
+        sudo ln -sf "$(dirname "$current_node_path")/npm" /usr/bin/npm
+      fi
+    fi
+  fi
+  return $exit_code
+}
+alias nvm="nvmUpdate"
+EOF
 
     title
-    echo "Please run \" source ~/.bashrc \" after install."
+    echo -e "Please run \" \033[1;33msource ~/.bashrc\033[0m \" after install."
     echo "Install Successful."
     read -p "Press enter to continue..."
 
