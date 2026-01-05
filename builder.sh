@@ -17,8 +17,6 @@ function setup(){
     sudo apt -y update | sudo apt -y upgrade
     sudo apt -y install curl wget git software-properties-common ca-certificates gnupg sudo gcc
 
-    sudo apt -y install tmux
-
     main
 }
 
