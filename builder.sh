@@ -48,7 +48,7 @@ function main() {
 
     if [ $choice -eq 1 ]; then
         __INSTALL_CODE_SERVER
-    elif [ $choice -eq 3 ]; then
+    elif [ $choice -eq 2 ]; then
         __INSTALL_VSCODE_TUNNEL
     elif [ $choice -eq 3 ]; then
         __INSTALL_ZIP
