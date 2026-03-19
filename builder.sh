@@ -29,9 +29,10 @@ function main() {
     echo -e
 
     echo "Tools : "
-    echo "├─ (1) code-server / run visual studio code on web browser."
-    echo "├─ (2) Zip / zip & unzip package."
-    echo "├─ (3) RClone / cloud drive tools."
+    echo "├─ (1) code-server / A online code editor service."
+    echo "├─ (2) vscode-tunnel / Run visual studio code on web browser or vsc."
+    echo "├─ (3) Zip / zip & unzip package."
+    echo "├─ (4) RClone / Cloud drive tools."
     echo -e
     echo "Programming Language: "
     echo "├─ (10) nvm / Node.js version manager."
@@ -47,9 +48,11 @@ function main() {
 
     if [ $choice -eq 1 ]; then
         __INSTALL_CODE_SERVER
-    elif [ $choice -eq 2 ]; then
-        __INSTALL_ZIP
     elif [ $choice -eq 3 ]; then
+        __INSTALL_VSCODE_TUNNEL
+    elif [ $choice -eq 3 ]; then
+        __INSTALL_ZIP
+    elif [ $choice -eq 4 ]; then
         __INSTALL_RCLONE
     elif [ $choice -eq 10 ]; then
         __INSTALL_NODE
@@ -81,7 +84,24 @@ EOL
     curl -fsSL https://code-server.dev/install.sh | sh
 
     title
-    echo "安裝成功"
+    echo "Install Successful."
+    sleep 2
+
+    main
+}
+
+function __INSTALL_VSCODE_TUNNEL(){
+    title
+    echo "Installing Visual Studio Code Tunnel..."
+
+    curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
+    tar -xf vscode_cli.tar.gz
+
+    sudo mv code /usr/local/bin/code-tunnel
+    rm -rf vscode_cli.tar.gz
+
+    title
+    echo "Install Successful."
     sleep 2
 
     main
