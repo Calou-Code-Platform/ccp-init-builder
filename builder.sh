@@ -37,6 +37,7 @@ function main() {
     echo "Programming Language: "
     echo "├─ (10) nvm / Node.js version manager."
     echo "├─ (11) pyenv / Python version manager."
+    echo "├─ (12) rust / Cargo."
 
     echo -e
 
@@ -58,6 +59,8 @@ function main() {
         __INSTALL_NODE
     elif [ $choice -eq 11 ]; then
         __INSTALL_PYTHON
+    elif [ $choice -eq 12 ]; then
+        __INSTALL_RUST
     else
         title
         echo "Error selection. please try again."
@@ -174,6 +177,18 @@ function __INSTALL_PYTHON() {
     echo "Please run \" source ~/.bashrc \" after install."
     echo "Install Successful."
     read -p "Press enter to continue..."
+
+    main
+}
+
+function __INSTALL_RUST() {
+    title
+    echo "Installing rust..."
+    curl https://sh.rustup.rs -sSf | sh
+
+    title
+    echo "Install Successful."
+    sleep 2
 
     main
 }
