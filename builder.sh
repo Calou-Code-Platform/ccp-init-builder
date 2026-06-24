@@ -174,7 +174,7 @@ function __INSTALL_PYTHON() {
     echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
 
     title
-    echo "Please run \" source ~/.bashrc \" after install."
+    echo "Please run \"source ~/.bashrc\" after install."
     echo "Install Successful."
     read -p "Press enter to continue..."
 
