@@ -12,6 +12,11 @@ function title() {
 }
 
 function setup(){
+    if [ ! -d "/ccp" ]; then
+        echo "Your ccp container version is outdated."
+        exit 1
+    fi
+
     title
 
     sudo apt -y update | sudo apt -y upgrade
