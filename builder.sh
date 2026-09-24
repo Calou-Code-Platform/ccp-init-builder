@@ -34,10 +34,8 @@ function main() {
     echo -e
 
     echo "Tools : "
-    echo "├─ (1) code-server / A online code editor service."
-    echo "├─ (2) vscode-tunnel / Run visual studio code on web browser or vsc."
-    echo "├─ (3) Zip / zip & unzip package."
-    echo "├─ (4) RClone / Cloud drive tools."
+    echo "├─ (1) vscode-tunnel / Run visual studio code on web browser or vsc."
+    echo "├─ (2) Zip / zip & unzip package."
     echo -e
     echo "Programming Language: "
     echo "├─ (10) nvm / Node.js version manager."
@@ -52,14 +50,10 @@ function main() {
 
     read -p "Choice : " choice
 
-    if [ $choice -eq 1 ]; then
-        __INSTALL_CODE_SERVER
-    elif [ $choice -eq 2 ]; then
+    elif [ $choice -eq 1 ]; then
         __INSTALL_VSCODE_TUNNEL
-    elif [ $choice -eq 3 ]; then
+    elif [ $choice -eq 2 ]; then
         __INSTALL_ZIP
-    elif [ $choice -eq 4 ]; then
-        __INSTALL_RCLONE
     elif [ $choice -eq 10 ]; then
         __INSTALL_NODE
     elif [ $choice -eq 11 ]; then
